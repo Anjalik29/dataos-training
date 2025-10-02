@@ -1,0 +1,71 @@
+name: event-360-consumer-business-metric-alert-pager
+version: v1alpha
+type: pager
+tags:
+  - dataos:type:resource
+description: This is for sending Alerts on Microsoft Teams for consumer-aligned business metric alerts.
+workspace: public
+pager:
+  conditions:
+    - valueJqFilter: .properties.name
+      operator: equals
+      value: event-360_consumer_metric
+  output:
+    webHook: 
+      url: https://rubikdatasolutions.webhook.office.com/webhookb2/23d5940d-c519-40db-8e75-875f3802e790@2e22bdde-3ec2-43f5-bf92-78e9f35a44fb/IncomingWebhook/aee8b3375ce94b5e8742f845c5bf18a6/07c3d4b1-971d-456e-bd7b-6a17522de08b/V2nHwZfwewJCARReddEt65VGxrXTuvJGBjpoTrve9lbHY1
+      verb: post
+      headers:
+        content-type: application/json
+      templateType: liquid
+      bodyTemplate: |
+       {
+          "@type": "MessageCard",
+          "summary": "📊 Consumer Business Alert: {{ properties.name | replace: '_', ' ' | capitalize }}",
+          "themeColor": "{% if properties.severity == 'critical' %}FF0000{% elsif properties.severity == 'warning' %}FFA500{% else %}0076D7{% endif %}",
+          "sections": [
+            {
+              "activityTitle": "🚨 Consumer Business Metric Alert",
+              "activitySubtitle": "{{ properties.category | capitalize }} threshold exceeded for event-360 - Action Required",
+              "facts": [
+                {
+                  "name": "Data Product:",
+                  "value": "event-360"
+                },
+                {
+                  "name": "Metric:",
+                  "value": "{{ properties.name | replace: '_', ' ' | capitalize }}"
+                },
+                {
+                  "name": "Current Value:",
+                  "value": "{{ equationContext.queryExpressions[0].leftExpressionValue }}"
+                },
+                {
+                  "name": "Threshold:",
+                  "value": "{{ equationContext.queryExpressions[0].rightExpressionValue }}"
+                },
+                {
+                  "name": "Alert Time:",
+                  "value": "{{ createTime | date: '%b %d, %Y at %I:%M %p UTC' }}"
+                },
+                {
+                  "name": "Priority:",
+                  "value": "{{ properties.severity | capitalize }}"
+                }
+              ]
+            },
+            {
+              "text": "**Business Impact:**
+This alert indicates that the consumer-aligned business metric for event-360 has exceeded the expected threshold. The current value requires immediate attention for business analytics and reporting."
+            },
+            {
+              "text": "**Recommended Actions:**
+• Review recent business activities that may have caused this change
+• Check related operational metrics for correlation
+• Consider if this represents a trend or isolated event
+• Contact the data team if you need additional analysis"
+            },
+            {
+              "text": "For detailed analysis or to adjust alert thresholds, please contact the Data Operations team."
+            }
+          ]
+        }

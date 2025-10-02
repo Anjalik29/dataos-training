@@ -1,0 +1,90 @@
+# Flare Configuration for dataos-event
+# Generated on 2025-10-02T15:56:59.151Z
+# Based on flare-template.yaml from Data-Product-Generator
+
+version: v1
+name: wf-clickstream-flare
+type: workflow
+tags:
+  - Tier.Gold
+description: This workflow is responsible for ingesting clickstream for analysis from source into Lakehouse.
+
+workflow:
+  title: dataos-event Source Dataset
+  dag:
+    - name: clickstream-flare
+      description: This workflow is responsible for ingesting clickstream for analysis from source into Lakehouse.
+      title: dataos-event Source Dataset
+      spec:
+        tags:
+          - Tier.Gold
+        stack: flare:6.0
+        compute: runnable-default
+        stackSpec:
+          driver:
+            coreLimit: 1200m
+            cores: 1
+            memory: 1024m
+          executor:
+            coreLimit: 1200m
+            cores: 1
+            instances: 1
+            memory: 1024m
+          job:
+            explain: true
+            inputs:
+              - name: clickstream_input
+                dataset: dataos://thirdparty01:sandbox/clickstream.json?acl=rw
+                format: json
+                options:
+                  multiLine: true
+
+              - name: clickstream_input
+                dataset: dataos://thirdparty01:sandbox/clickstream.csv?acl=rw
+                format: csv
+                options:
+                  header: true
+                  inferSchema: true
+
+              - name: clickstream_input
+                dataset: dataos://postgres:sandbox/clickstream?acl=rw
+                options:
+                  driver: org.postgresql.Driver
+                  
+              - name: clickstream_input
+                dataset: dataos://bigquery:sandbox/clickstream?acl=rw
+                format: Bigquery
+            logLevel: INFO
+            outputs:
+              - name: clickstream_final_dataset
+                dataset: dataos://clickstream_catalog:sandbox/clickstream?acl=rw
+                format: Iceberg
+                description: The clickstream table is a structured dataset that contains comprehensive information about various clickstream within the organization. It serves as a central repository for clickstream data, facilitating efficient management, analysis, and decision-making processes related to clickstream operations, logistics, and customer engagement.
+                tags:
+                  - Tier.Gold
+                options:
+                  saveMode: overwrite
+                  iceberg:
+                    properties:
+                      write.format.default: parquet
+                      write.metadata.compression-codec: gzip
+                title: dataos-event Source Dataset
+            steps:
+              - sequence:
+                  - name: clickstream_final_dataset
+                    sql: |
+                      SELECT 
+                        *
+                      FROM
+                        clickstream_input_1
+                    functions:
+                      - name: cleanse_column_names
+                      - name: change_column_case
+                        case: lower
+                      - name: set_type
+                        columns:
+                          created_at: timestamp
+                          updated_at: timestamp
+                      - name: drop
+                        columns:
+                          - temp_column

@@ -1,0 +1,67 @@
+version: v1
+name: masking-policy
+type: policy
+layer: user
+description: "Data policy to apply hashing for personally identifiable information (PII) columns based on column names"
+owner:
+policy:
+  data:
+    type: mask
+    priority: 70
+    selector:
+      user:
+        match: any
+tags:
+          - "roles:id:user-masking-access"
+      column:
+        tags:
+          - "PII.Masking"
+    mask:
+      operator: hash
+      hash:
+        algo: sha256
+
+---
+
+version: v1
+name: piireader
+type: policy
+layer: user
+description: "Data policy enabling controlled read access to PII columns"
+owner:
+policy:
+  data:
+    type: mask
+    priority: 65
+    selector:
+      user:
+        match: any
+        tags:
+          - roles:id:pii-reader
+      column:
+        tags:
+          - "PII.Masking"
+    mask:
+      operator: pass_through
+
+---
+version: v1
+name: filter-policy-broadcom
+type: policy
+layer: user
+description: "data policy to filter process file publisher"
+owner:
+policy:
+  data:
+    type: filter
+    priority: 75
+    dataset_id: icebase.sensor_device.device_process_event_dataset
+    selector:
+      user:
+        match: any
+        tags:
+          - "roles:id:selective-restricted-access"
+    filters:
+      - column: process_file_publisher
+        operator: equals
+        value: "Broadcom"

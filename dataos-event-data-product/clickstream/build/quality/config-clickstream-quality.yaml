@@ -1,0 +1,85 @@
+name: wf-clickstream-quality
+version: v1
+type: workflow
+tags:
+  - Tier.Gold
+description: |
+  Performs quality checks on raw clickstream event data to ensure completeness, consistency, and schema compliance—strengthening data trust and enabling better business decisions.
+workspace: public
+workflow:
+  # schedule:
+  #   cron: '*/5 * * * *'
+  #   concurrencyPolicy: Forbid
+  dag:
+    - name: clickstream-quality
+      description: |
+        Performs quality checks on raw clickstream event data to ensure completeness, consistency, and schema compliance—strengthening data trust and enabling better business decisions.
+      title: dataos-event Quality Assertion
+      spec:
+        stack: soda+python:1.0 
+        logLevel: INFO
+        compute: runnable-default
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 250Mi
+          limits:
+            cpu: 1000m
+            memory: 250Mi
+        stackSpec:
+          inputs:
+            - dataset: dataos://icebase:clickstream/clickstream?acl=rw 
+              options:
+                engine: minerva
+                clusterName: system   
+              checks:
+                - missing_count(clickstream_id) = 0: 
+                    attributes:
+                      category: Accuracy
+
+                - duplicate_percent(clickstream_id) < 0.10:
+                    attributes:
+                      category: Validity
+
+                - duplicate_count(clickstream_id) = 0:
+                    attributes:
+                      category: Uniqueness
+                      description: The clickstream column must not contain duplicate values.
+
+                - missing_count(clickstream_id) = 0:
+                    attributes:
+                      category: Completeness
+                      description: The clickstream column must not contain missing values.
+
+                - invalid_count(item_name) <= 0:
+                    valid regex: \b(?:DeviceDriverLoaded|DeviceDriverInstall)\b
+                    attributes:
+                      category: Validity
+
+                - freshness(created_at)  < 730d:
+                    attributes:
+                      category: Freshness
+                - schema:
+                    name: Confirm that required columns are present
+                    warn:
+                      when required column missing: [clickstream_id]
+                    fail:
+                      when required column missing:
+                        - clickstream_id
+                    attributes:
+                      category: Schema 
+
+                -  amount_limit = 1:
+                    amount_limit query: |
+                      SELECT
+                        CASE
+                          WHEN cast(amount AS integer)  <= 70 then 1
+                          ELSE 0
+                        END
+                        FROM
+                          clickstream
+                    attributes:
+                      category: Accuracy
+              profile:
+                columns:
+                  - "*"

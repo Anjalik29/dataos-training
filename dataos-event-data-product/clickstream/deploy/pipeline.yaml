@@ -1,0 +1,26 @@
+version: v1
+name: wf-clickstream-pipeline
+type: workflow
+tags:
+  - Tier.Gold
+  - Domain.clickstream
+description: The "wf-clickstream-pipeline" is a data pipeline focused on processing clickstream data. It involves stages such as data ingestion and quality assurance to derive insights.
+workflow:
+  # schedule:
+  #   cron: '0 2 * * 6'
+  #   concurrencyPolicy: Forbid
+  title: clickstream Pipeline
+  dag: 
+    - name: clickstream-ingestion
+      file: clickstream/clickstream/build/data-processing/config-clickstream-flare.yaml
+      retry: 
+        count: 2
+        strategy: "OnFailure"
+
+    - name: clickstream-quality
+      file: clickstream/clickstream/build/quality/config-clickstream-quality.yaml
+      retry: 
+        count: 2
+        strategy: "OnFailure"        
+      dependencies:
+        - clickstream-ingestion

@@ -1,0 +1,31 @@
+name: event-360-dp
+version: v1beta
+type: data
+description: |
+  event-360 consumer-aligned data product delivers business-ready analytics and insights, enabling data-driven decision making and operational excellence.
+tags:
+  - DPUsecase.Business Intelligence
+  - DPTier.Consumer Aligned
+  - DPDomain.Business Analytics
+purpose: |
+  Enables business users to make informed decisions by providing clean, aggregated, and business-ready data for reporting, analytics, and operational dashboards.
+v1beta:
+  data:
+    meta:
+      title: event-360 Consumer Analytics
+      sourceCodeUrl: https://bitbucket.org/rubik_/solutions/src/canned-demo/customer-solution/consumer-analytics/
+      trackerUrl: https://rubikai.atlassian.net/browse/DPRB-87
+    collaborators:
+      - name: business-analyst
+        description: owner
+      - name: data-scientist
+        description: developer
+    resource:
+      refType: dataos
+      ref: bundle:v1beta:event-360-bundle
+    inputs:
+      - refType: dataos
+        ref: dataset:lakehouse:sandbox:event-360
+    outputs:
+      - refType: dataos
+        ref: dataset:lakehouse:analytics:event-360_consumer

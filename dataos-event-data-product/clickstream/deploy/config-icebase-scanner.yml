@@ -1,0 +1,32 @@
+version: v1
+name: wf-icebase-depot-scanner
+type: workflow
+tags:
+- Tier.Gold
+description: Scan schema from icebase and register in Metis.
+workspace: public
+workflow:
+  dag:
+  - name: icebase-depot-scanner
+    description: Scan schema and register in Metis.
+    spec:
+      tags:
+      - scanner
+      stack: scanner:2.0
+      runAsUser: metis
+      compute: runnable-default
+      resources:
+        requests:
+          cpu: 200m
+          memory: 250Mi
+        limits:
+          cpu: '1'
+          memory: 1000Mi
+      stackSpec:
+        depot: dataos://icebase
+        sourceConfig:
+          config:
+            schemaFilterPattern:
+              includes:
+              - sys01
+ 

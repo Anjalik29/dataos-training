@@ -1,0 +1,64 @@
+tables:
+  - name: clickstream
+    sql: {{ load_sql('clickstream') }}
+    description: Comprehensive clickstream data for business analytics, reporting, and operational insights
+    data_source: icebase
+    public: true
+
+    dimensions:
+      - name: event_id
+        description: "Primary business identifier for clickstream used in data relationships and analytics"
+        type: string
+        sql: event_id
+        primary_key: true
+
+      - name: event_name
+        description: "Name of the user action or event captured in the clickstream (e.g., page_view, button_click, add_to_cart)"
+        type: string
+        sql: event_name
+
+      - name: event_type
+        description: "Category or classification of the event for analytics segmentation and behavioral analysis"
+        type: string
+        sql: event_type
+
+      - name: event_date
+        description: "Timestamp when the user event occurred, enabling time-based analysis and trend reporting"
+        type: time
+        sql: event_date
+
+      - name: user_id
+        description: "Unique identifier for the user performing the action, used for user journey analysis and personalization"
+        type: string
+        sql: user_id
+
+      - name: session_id
+        description: "Unique session identifier for grouping user activities within a single visit or interaction period"
+        type: string
+        sql: session_id
+
+      - name: app_name
+        description: "Application or platform name where the event originated, enabling cross-platform analysis"
+        type: string
+        sql: app_name
+
+    measures:
+      - name: total_user
+        sql: user_id
+        type: count
+        description: "Total count of user records for business metrics and KPI calculations"
+
+      - name: session_minutes
+        sql: "(MAX(event_date) - MIN(event_date)) / 1000 / 60.0"
+        type: number
+        description: "Duration of user session in minutes, calculated from first to last event timestamp for engagement analysis"
+
+      - name: total_hour
+        sql: sum({TABLE.session_minutes} / 60.0)
+        type: number
+        description: "Total hours of user session for engagement analysis"
+
+      - name: total_sessions
+        sql: session_id
+        type: count_distinct
+        description: "Total count of unique user sessions for engagement metrics and session analysis"

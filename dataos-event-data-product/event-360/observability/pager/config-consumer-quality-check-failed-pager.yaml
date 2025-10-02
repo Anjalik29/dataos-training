@@ -1,0 +1,66 @@
+name: consumer-quality-failed-pager
+version: v1alpha
+type: pager
+tags:
+  - dataos:type:resource
+description: This is for sending Alerts on Microsoft Teams for consumer-aligned quality check failures
+workspace: public
+pager:
+  conditions:
+    - valueJqFilter: .properties.name
+      operator: equals
+      value: consumer-soda-check-fail
+    - valueJqFilter: .properties.incident_type
+      operator: equals
+      value: consumer-soda-quality
+    - valueJqFilter: .properties.severity
+      operator: equals
+      value: high
+  output:
+    email:
+      emailTargets:
+        - kishan.mahajan@tmdc.io
+        - yogesh.khangode@tmdc.io
+    webHook:
+      url: https://rubikdatasolutions.webhook.office.com/webhookb2/23d5940d-c519-40db-8e75-875f3802e790@2e22bdde-3ec2-43f5-bf92-78e9f35a44fb/IncomingWebhook/7d2bbe6253494c8a8e216c22b5c9eb49/5d420a71-7170-4d0c-af28-680a98583e58
+      verb: post
+      headers:
+        'content-type': 'application/json'
+      bodyTemplate: |
+            {
+              "@type": "MessageCard",
+              "summary": "Consumer Quality Check Failure - event-360",
+              "themeColor": "0076D7",
+              "sections": [
+                {
+                  "activityTitle": "Dear Team,",
+                  "activitySubtitle": "⚠️ Our system detected an issue with the consumer-aligned data quality for event-360",
+                  "activityImage": "https://adaptivecards.io/content/cats/3.png",
+                  "facts": [
+                    {
+                      "name": "   Record Time:",
+                      "value": "{{ .CreateTime }}"
+                    },
+                    {
+                      "name": "   Severity:",
+                      "value": "{{ .Properties.severity }}"
+                    },
+                    {
+                      "name": "   Data Product:",
+                      "value": "event-360"
+                    }
+                  ]
+                },
+                {
+                   "title": "Message",
+                  "text": "Consumer Quality Check Failure detected !!!
+
+ Recent consumer-aligned quality check for event-360 has resulted in a failure due to ambiguities found in the business-ready data. It appears there are inconsistencies or inaccuracies that require your immediate attention."
+                },
+                {
+                  "text": "
+
+"
+                }
+              ]
+            }

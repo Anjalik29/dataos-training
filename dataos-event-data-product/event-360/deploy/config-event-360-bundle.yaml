@@ -1,0 +1,12 @@
+name: event-360-bundle
+version: v1beta
+type: bundle
+tags:
+  - Tier.Gold
+description: The purpose of the bundle is to deploy the consumer-aligned resources of the event-360 Data Product, making it available for business consumption and analytics.
+layer: "user"
+bundle:
+  resources:
+    - id: event-360-pipeline
+      file: event-360/event-360/build/semantic-model/event-360/model/deployment.yaml
+      workspace: public

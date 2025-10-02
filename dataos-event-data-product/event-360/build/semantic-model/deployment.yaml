@@ -1,0 +1,56 @@
+---
+version: v1alpha
+name: "event-360" # TODO: change this to the correct name
+layer: user
+type: lens
+tags:
+  - Tier.Gold
+description: Deployment of event-360 Lens2 for advanced monitoring and optimized management capabilities.
+lens:
+  compute: runnable-default
+  source:
+    type: minerva # case 1: minerva
+    name: system
+    catalog: icebase
+  repo:
+    url: https://github.com/Anjalik29/dataos-training
+    lensBaseDir: dataos-training/dataos-event-data-product/event-360/build/semantic-model/event-360/model
+    syncFlags:  
+      - --ref=main   # TODO: change this to the correct branch
+  api:   # optional
+    replicas: 1 # optional
+    logLevel: info  # optional
+    envs:
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources: # optional
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1048Mi
+  worker: # optional
+    replicas: 1 # optional
+    logLevel: info  # optional
+    envs:
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources: # optional
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1048Mi
+  router: # optional
+    logLevel: info  # optional
+    envs:
+      LENS2_SCHEDULED_REFRESH_TIMEZONES: "UTC,America/Vancouver,America/Toronto"
+    resources: # optional
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1048Mi
+  metric:
+    logLevel: info

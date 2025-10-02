@@ -1,0 +1,60 @@
+name: consumer-workflow-failed-pager
+version: v1alpha
+type: pager
+tags:
+  - dataos:type:resource
+  - consumer-workflow-failed-pager
+description: This is for sending Alerts on Microsoft Teams for consumer-aligned workflow failures.
+workspace: public
+pager:
+  conditions:
+    - valueJqFilter: .properties.name
+      operator: equals
+      value: consumer-workflowfailed
+    - valueJqFilter: .properties.incident_type
+      operator: equals
+      value: consumer-workflowruntimefailure
+    - valueJqFilter: .properties.severity
+      operator: equals
+      value: high
+  output:
+    webHook:
+      url: https://rubikdatasolutions.webhook.office.com/webhookb2/d9b5e7fc-3034-438a-9d8f-9af84e247940@2e22bdde-3ec2-43f5-bf92-78e9f35a44fb/IncomingWebhook/29cf283c925b4900abbfa551ec50b01f/5d420a71-7170-4d0c-af28-680a98583e58/V2IYe9tq2jfxwipVGguf5hdearXT11bVqYaa4jGBhPDZE1
+      verb: post
+      headers:
+        'content-type': 'application/json'
+      bodyTemplate: |
+          {
+            "@type": "MessageCard",
+            "summary": "Consumer Workflow has Failed - event-360",
+            "themeColor": "0076D7",
+            "sections": [
+              {
+                "activityTitle": "Dear Team,",
+                "activitySubtitle": "⚠️ Our system detected an issue with the consumer-aligned workflow for event-360 and was unable to complete the process as expected.",
+                "facts": [
+                  {
+                    "name": "   The following consumer workflow has failed:",
+                    "value": "{{ index (splitn ":" 4 .ReportContext.ResourceId) "_2" }}"
+                  },
+                  {
+                    "name": "   Failure Time:",
+                    "value": "{{ .CreateTime }}"
+                  },
+                  {
+                    "name": "   Severity:",
+                    "value": "{{ .Properties.severity }}"
+                  },
+                  {
+                    "name": "   Data Product:",
+                    "value": "event-360"
+                  }
+                ]
+              },
+              {
+                "text": "Consumer Analytics Processing Issue detected !!! 
+
+ We understand the importance of timely and accurate business analytics, and our team is actively working to resolve the issue and get the consumer pipeline back up and running as soon as possible."
+              }
+            ]
+          }
