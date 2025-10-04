@@ -12,15 +12,7 @@ tables:
         sql: event_id
         primary_key: true
 
-      - name: event_name
-        description: "Name of the user action or event captured in the clickstream (e.g., page_view, button_click, add_to_cart)"
-        type: string
-        sql: event_name
-
-      - name: event_type
-        description: "Category or classification of the event for analytics segmentation and behavioral analysis"
-        type: string
-        sql: event_type
+      
 
       - name: event_date
         description: "Timestamp when the user event occurred, enabling time-based analysis and trend reporting"
@@ -42,19 +34,20 @@ tables:
         type: string
         sql: app_name
 
+      - name: session_duration_seconds
+        description: "Duration of user session in seconds, calculated from first to last event timestamp for engagement analysis"
+        type: number
+        sql: session_duration_seconds
+          
+
     measures:
       - name: total_user
         sql: user_id
-        type: count
+        type: count_distinct
         description: "Total count of user records for business metrics and KPI calculations"
 
-      - name: session_minutes
-        sql: "(MAX(event_date) - MIN(event_date)) / 1000 / 60.0"
-        type: number
-        description: "Duration of user session in minutes, calculated from first to last event timestamp for engagement analysis"
-
       - name: total_hour
-        sql: sum({TABLE.session_minutes} / 60.0)
+        sql: sum({TABLE.session_duration_seconds} / 60/ 60 )
         type: number
         description: "Total hours of user session for engagement analysis"
 
