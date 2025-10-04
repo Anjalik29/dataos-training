@@ -6,13 +6,6 @@ tables:
     public: true
 
     dimensions:
-      - name: event_id
-        description: "Primary business identifier for clickstream used in data relationships and analytics"
-        type: string
-        sql: event_id
-        primary_key: true
-
-      
 
       - name: event_date
         description: "Timestamp when the user event occurred, enabling time-based analysis and trend reporting"
@@ -28,6 +21,8 @@ tables:
         description: "Unique session identifier for grouping user activities within a single visit or interaction period"
         type: string
         sql: session_id
+        primary_key: true
+        public: true
 
       - name: app_name
         description: "Application or platform name where the event originated, enabling cross-platform analysis"
