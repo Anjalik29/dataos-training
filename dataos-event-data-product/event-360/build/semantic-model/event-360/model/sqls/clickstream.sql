@@ -7,4 +7,4 @@ SELECT
   session_id,
   app_name
 FROM
-  icebase.sys01.page_event_01
+  icebase.sys01.page_events_01
