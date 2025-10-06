@@ -50,3 +50,5 @@ tables:
         sql: session_id
         type: count_distinct
         description: "Total count of unique user sessions for engagement metrics and session analysis"
+
+        
