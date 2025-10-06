@@ -37,7 +37,7 @@ tables:
       - name: apps_used
         description: "Total apps used by per user"
         type: string
-        sql: app_name
+        sql: apps_used
         
 
           
