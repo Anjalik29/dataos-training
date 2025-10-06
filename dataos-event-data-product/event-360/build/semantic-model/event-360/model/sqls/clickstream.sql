@@ -15,5 +15,5 @@ FROM
 GROUP BY
     user_id,
     session_id,
-    date(from_unixtime(timestamp / 1000));
+    date(from_unixtime(timestamp / 1000))
 

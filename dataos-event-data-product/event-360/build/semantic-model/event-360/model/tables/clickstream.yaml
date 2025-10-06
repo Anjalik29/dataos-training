@@ -39,7 +39,6 @@ tables:
         type: string
         sql: app_name
         
-        
 
           
 
