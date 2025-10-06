@@ -51,4 +51,7 @@ tables:
         type: count_distinct
         description: "Total count of unique user sessions for engagement metrics and session analysis"
 
-        
+        name: apps_name
+        sql: apps_used
+        type: array
+        description: "Total count of apps used by the user"
