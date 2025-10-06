@@ -38,9 +38,8 @@ tables:
         description: "Total apps used by per user"
         type: string
         sql: apps_used
-        
 
-          
+
 
     measures:
 
