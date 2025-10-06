@@ -33,6 +33,12 @@ tables:
         description: "Duration of user session in seconds, calculated from first to last event timestamp for engagement analysis"
         type: number
         sql: session_duration_seconds
+
+      - name: apps_used
+        sql: app_name
+        type: string
+        description: "Total apps used by per user"
+
           
 
     measures:
@@ -51,7 +57,4 @@ tables:
         type: count_distinct
         description: "Total count of unique user sessions for engagement metrics and session analysis"
 
-      - name: apps_used
-        sql: app_name
-        type: string
-        description: "Total apps used by per user"
+    
