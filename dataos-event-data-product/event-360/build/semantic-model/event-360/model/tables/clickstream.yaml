@@ -53,5 +53,5 @@ tables:
 
       - name: apps_used
         sql: app_name
-        type: array
+        type: string
         description: "Total apps used by per user"
