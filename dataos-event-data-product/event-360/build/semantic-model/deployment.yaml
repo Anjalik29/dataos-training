@@ -52,5 +52,3 @@ lens:
       limits:
         cpu: 1000m
         memory: 1048Mi
-  metric:
-    logLevel: info

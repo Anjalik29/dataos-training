@@ -43,6 +43,8 @@ tables:
           
 
     measures:
+
+
       - name: total_user
         sql: user_id
         type: count_distinct
@@ -56,6 +58,4 @@ tables:
       - name: total_sessions
         sql: session_id
         type: count_distinct
-        description: "Total count of unique user sessions for engagement metrics and session analysis"
-
-    
+        description: "Total count of unique user sessions for engagement metrics and session analysis"    

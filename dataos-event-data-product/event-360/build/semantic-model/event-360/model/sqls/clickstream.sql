@@ -1,7 +1,7 @@
 SELECT
     user_id,
     session_id,
-    date(from_unixtime(timestamp / 1000)) AS event_date,
+    cast(date(from_unixtime(timestamp / 1000)) AS timestamp) AS event_date,
     array_join(array_agg(DISTINCT app_name), ', ') AS apps_used,
     CAST(
         date_diff(
