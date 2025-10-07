@@ -43,7 +43,7 @@ tables:
     measures:
 
       - name: list_of_apps
-        sql: cast(array_agg(distinct app_name) as varchar)
+        sql: array_agg(distinct app_name)
         type: string
         description: "List of apps used by per user"
 
