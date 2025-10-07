@@ -43,10 +43,10 @@ tables:
     measures:
 
       - name: list_of_apps
-        sql: list_agg(app_name)
+        sql: array_agg(distinct app_name)
         type: string
         description: "List of apps used by per user"
-        
+
       - name: total_user
         sql: user_id
         type: count_distinct
