@@ -57,7 +57,7 @@ tables:
         description: "Total count of unique user sessions for engagement metrics and session analysis"    
 
       - name: list_of_apps
-        sql: string_agg(DISTINCT app_name, ', ')
+        sql:  array_join(array_agg (DISTINCT app_name), ', ')
         type: string
         description: "List of apps used by per user"
 
