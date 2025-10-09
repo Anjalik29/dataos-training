@@ -1,0 +1,29 @@
+version: v1
+name: wf-data-product-scanner
+type: workflow
+tags:
+  - scanner
+  - data-product
+description: The job scans data product from poros
+workflow:
+  # schedule:
+  #   cron: '*/20 * * * *'
+  #   concurrencyPolicy: Forbid
+  dag:
+    - name: data-product-scanner
+      description: The job scans data-product from poros and register data to metis
+      spec:
+        tags:
+          - scanner2
+        stack: scanner:2.0
+        compute: runnable-default
+        stackSpec:
+          type: data-product
+          sourceConfig:
+            config:
+              type: DataProduct
+              markDeletedDataProducts: true
+              dataProductFilterPattern:
+                includes:
+                  - event-360-dp
+ 

@@ -1,31 +1,44 @@
 name: event-360-dp
 version: v1beta
+entity: product
 type: data
-description: |
-  event-360 consumer-aligned data product delivers business-ready analytics and insights, enabling data-driven decision making and operational excellence.
+purpose: To provide a thorough analysis of device performance and operational metrics, aimed at monitoring device efficiency, diagnosing issues, and optimizing device performance.
 tags:
-  - DPUsecase.Business Intelligence
+  - DPUsecase.Device Performance
   - DPTier.Consumer Aligned
-  - DPDomain.Business Analytics
-purpose: |
-  Enables business users to make informed decisions by providing clean, aggregated, and business-ready data for reporting, analytics, and operational dashboards.
+  - DPDomain.Device Management
+description: Get a thorough analysis of device performance and operational metrics, aimed at monitoring device efficiency, diagnosing issues, and optimizing device performance.
 v1beta:
   data:
     meta:
-      title: event-360 Consumer Analytics
-      sourceCodeUrl: https://bitbucket.org/rubik_/solutions/src/canned-demo/customer-solution/consumer-analytics/
-      trackerUrl: https://rubikai.atlassian.net/browse/DPRB-87
+      title: Event 360
     collaborators:
-      - name: business-analyst
-        description: owner
-      - name: data-scientist
-        description: developer
+      - name: anjalikhangode
+        description: owner   
     resource:
-      refType: dataos
-      ref: bundle:v1beta:event-360-bundle
+      refType: dataos # mandatory 
+      ref: bundle:v1beta:device-insight-360-bundle
+
     inputs:
-      - refType: dataos
-        ref: dataset:lakehouse:sandbox:event-360
-    outputs:
-      - refType: dataos
-        ref: dataset:lakehouse:analytics:event-360_consumer
+      - ref: dataset:icebase:sys01:page_events_01
+        refType: dataos    
+
+    ports:
+      rest:
+        - url: https://liberal-katydid.dataos.app/api/v2/rest
+          meta:
+            description: REST API access for cross-sell data operations
+
+      postgres:
+        - host: tcp.liberal-katydid.dataos.app # liberal
+          port: 5432
+          params:
+            ssl: true
+          meta:
+            description: postgres access for financial customer datasets
+
+      lens:
+        ref: lens:v1alpha:event-360:public # lens name event-360
+        refType: dataos
+
+        

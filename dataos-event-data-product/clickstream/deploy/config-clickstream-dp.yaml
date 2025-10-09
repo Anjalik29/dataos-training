@@ -4,9 +4,9 @@ type: data
 description: |
   clickstream delivers structured, time-stamped event data that reveals key operational signals, enabling observability and data-driven optimization.
 tags:
-  - DPUsecase.Event Analytics
-  - DPTier.Source Aligned
-  - DPDomain.Event Intelligence
+  - DPUsecase.Device Performance
+  - DPTier.Consumer Aligned
+  - DPDomain.Device Management
 purpose: |
   Enables faster decisions and performance insights by converting raw events into trusted, analytics-ready data for monitoring and diagnostics.
 v1beta:
@@ -21,7 +21,7 @@ v1beta:
       ref: bundle:v1beta:clickstream-bundle
     inputs:
       - refType: dataos
-        ref: dataset:icebase:sys01:page_event_01
+        ref: dataset:icebase:sys01:page_events_01
     outputs:
       - refType: dataos
-        ref: dataset:icebase:sys01:page_event_01
+        ref: dataset:icebase:sys01:page_events_01
