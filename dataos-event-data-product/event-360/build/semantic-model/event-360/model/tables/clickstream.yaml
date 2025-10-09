@@ -39,11 +39,6 @@ tables:
         type: string
         sql: apps_used
 
-      - name: list_of_apps
-        sql: array_agg(distinct app_name)
-        type: string
-        description: "List of apps used by per user"
-
 
     measures:
       - name: total_user
@@ -61,7 +56,10 @@ tables:
         type: count_distinct
         description: "Total count of unique user sessions for engagement metrics and session analysis"    
 
-
+      - name: list_of_apps
+        sql: array_agg(distinct app_name)
+        type: string
+        description: "List of apps used by per user"
 
 
         
