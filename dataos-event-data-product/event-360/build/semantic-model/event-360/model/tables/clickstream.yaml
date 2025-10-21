@@ -47,7 +47,7 @@ tables:
         description: "Total count of user records for business metrics and KPI calculations"
 
       - name: total_hour
-        sql: sum({TABLE.session_duration_seconds} / 60/ 60 )
+        sql: round(sum({TABLE.session_duration_seconds} / 60/ 60 ), 1)
         type: number
         description: "Total hours of user session for engagement analysis"
 
