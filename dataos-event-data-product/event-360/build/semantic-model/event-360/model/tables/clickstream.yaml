@@ -51,6 +51,11 @@ tables:
         type: number
         description: "Total hours of user session for engagement analysis"
 
+      - name: total_minutes
+        sql: sum({TABLE.session_duration_seconds} / 60 )
+        type: number
+        description: "Total minutes of user session for engagement analysis"
+
       - name: total_sessions
         sql: session_id
         type: count_distinct

@@ -28,58 +28,40 @@ workflow:
             memory: 250Mi
         stackSpec:
           inputs:
-            - dataset: dataos://icebase:clickstream/clickstream?acl=rw 
+            - dataset: dataos://icebase:sys01/page_events_01?acl=rw 
               options:
                 engine: minerva
                 clusterName: system   
               checks:
-                - missing_count(clickstream_id) = 0: 
+                - missing_count(event_id) = 0: 
                     attributes:
                       category: Accuracy
 
-                - duplicate_percent(clickstream_id) < 0.10:
+                - duplicate_percent(event_id) < 0.10:
                     attributes:
                       category: Validity
 
-                - duplicate_count(clickstream_id) = 0:
+                - duplicate_count(event_id) = 0:
                     attributes:
                       category: Uniqueness
-                      description: The clickstream column must not contain duplicate values.
+                      description: The event_id column must not contain duplicate values.
 
-                - missing_count(clickstream_id) = 0:
+                - missing_count(event_type) = 0:
                     attributes:
                       category: Completeness
-                      description: The clickstream column must not contain missing values.
-
-                - invalid_count(item_name) <= 0:
-                    valid regex: \b(?:DeviceDriverLoaded|DeviceDriverInstall)\b
-                    attributes:
-                      category: Validity
-
-                - freshness(created_at)  < 730d:
-                    attributes:
-                      category: Freshness
+                      description: The event_type column must not contain missing values.
                 - schema:
                     name: Confirm that required columns are present
                     warn:
-                      when required column missing: [clickstream_id]
+                      when required column missing: [event_id,user_id,session_id]
                     fail:
                       when required column missing:
-                        - clickstream_id
+                        - event_id
+                        - user_id
+                        - session_id
                     attributes:
                       category: Schema 
 
-                -  amount_limit = 1:
-                    amount_limit query: |
-                      SELECT
-                        CASE
-                          WHEN cast(amount AS integer)  <= 70 then 1
-                          ELSE 0
-                        END
-                        FROM
-                          clickstream
-                    attributes:
-                      category: Accuracy
               profile:
                 columns:
                   - "*"
